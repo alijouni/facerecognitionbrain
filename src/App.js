@@ -10,9 +10,7 @@ import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
 import Clarifai from 'clarifai';
 
-const app = new Clarifai.App({
-  apiKey: "1cf7d49421e1474caa34a9293f3d0592",
-});
+
 
 const particlesOptions= {
   particles: {
@@ -87,29 +85,34 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageURL: this.state.input });
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input)
-      .then(response => {
-        if (response) {
-          fetch('http://localhost:3001/image', {
-            method: 'put',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              id: this.state.user.id
-    
-            })
-          })
-            .then(response => response.json())
-            .then(count => {
-            this.setState(Object.assign(this.state.user,{entries:count}))
-          })
-          .catch(console.log);
-        }
-        this.displayFaceBox(this.calculateFaceLocation(response))
+    fetch('https://safe-scrubland-81316.herokuapp.com/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.input
+
       })
-      .catch(err => console.log(err));
+    })
+    .then(response=> response.json())
+    .then(response => {
+      if (response) {
+        fetch('https://safe-scrubland-81316.herokuapp.com/image', {
+          method: 'put',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: this.state.user.id
+  
+          })
+        })
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, { entries: count }))
+        })
+        .catch(console.log);
+      }
+      this.displayFaceBox(this.calculateFaceLocation(response));
+    })
+    .catch(err => console.log(err));
 
   }
   
