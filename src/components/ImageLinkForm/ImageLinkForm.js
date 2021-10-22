@@ -3,7 +3,12 @@ import './ImageLinkForm.css'
 
 
 
-const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
+const ImageLinkForm = ({onInputChange, onButtonSubmit }) => {
+    const inputFile = React.useRef(null);
+    const onButtonClick = () => {
+        // `current` points to the mounted file input element
+       inputFile.current.click();
+      };
     return (
         <div>
             <p className='f3'>
@@ -16,8 +21,15 @@ const ImageLinkForm = ({ onInputChange, onButtonSubmit }) => {
                         className='w-30 grow f4 link ph3 pv2 dib white bg-light-purple'
                         onClick={onButtonSubmit}
                     >Detect</button></div>
+                <div className='form center pa4 br3 shadow-5'>
+                    <input className='f4 pa2 w-70 center' type='file' id='file' ref={inputFile} style={{display: 'none'}}/>
+                    <button
+                        className='w-30 grow f4 link ph3 pv2 dib white bg-light-purple'
+                        onClick={onButtonClick}
+                    >Upload</button></div>
                 
             </div>
+
 
         </div>
     )
