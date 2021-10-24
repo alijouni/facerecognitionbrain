@@ -27,6 +27,7 @@ const initialState={
   
     input: '',
     imageURL: '',
+    selectedFile: null,
     box: {},
     route: 'signin',
     isSignedIn: false,
@@ -44,6 +45,7 @@ class App extends Component {
     this.state = {
       input: '',
       imageURL: '',
+      selectedFile: null,
       box: {},
       route: 'signin',
       isSignedIn: false,
@@ -82,6 +84,10 @@ class App extends Component {
     this.setState({ input: event.target.value });
   }
 
+  onFileChange = (event) => {
+    this.setState({ selectedFile: event.target.files[0] }); 
+  }
+
   onButtonSubmit = () => {
     this.setState({ imageURL: this.state.input });
     fetch('https://safe-scrubland-81316.herokuapp.com/imageurl', {
@@ -89,6 +95,38 @@ class App extends Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         input: this.state.input
+
+      })
+    })
+    .then(response=> response.json())
+    .then(response => {
+      if (response) {
+        fetch('https://safe-scrubland-81316.herokuapp.com/image', {
+          method: 'put',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: this.state.user.id
+  
+          })
+        })
+          .then(response => response.json())
+          .then(count => {
+            this.setState(Object.assign(this.state.user, { entries: count }))
+        })
+        .catch(console.log);
+      }
+      this.displayFaceBox(this.calculateFaceLocation(response));
+    })
+    .catch(err => console.log(err));
+
+  }
+
+  onButtonUpload = () => {
+    fetch('https://safe-scrubland-81316.herokuapp.com/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.selectedFile
 
       })
     })
@@ -151,6 +189,8 @@ class App extends Component {
               <ImageLinkForm
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
+                onFileChange={this.onFileChange}
+                onButtonUpload={this.onButtonUpload}
               />
                 <FaceRecognition box={box} imageURL={imageURL} />
           </div>
