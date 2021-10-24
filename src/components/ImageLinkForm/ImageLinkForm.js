@@ -22,7 +22,7 @@ const ImageLinkForm = ({onInputChange, onButtonSubmit }) => {
                         className='w-30 grow f4 link ph3 pv2 dib white bg-light-purple'
                         onClick={onButtonSubmit}
                     >Detect</button>
-                    <input className='f4 pa2 w-70 center' type='file' id='file' ref={inputFile} style={{display: 'none'}} onChage={onInputChange}/>
+                    <input className='f4 pa2 w-70 center' type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={onInputChange}/>
                     <button
                         className='w-30 grow f4 link ph3 pv2 dib white bg-light-purple'
                         onClick={onButtonClick}
