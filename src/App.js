@@ -9,6 +9,8 @@ import Rank from './components/Rank/Rank';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
+import HandleApi from './components/ImageLinkForm/HandleApi';
+import {useEffect} from 'react';
 
 
 
@@ -28,8 +30,11 @@ const initialState={
   
     input: '',
     imageURL: '',
-    selectedFile: null,
-    base64Data: null,
+  selectedFile: null,
+  previewFile:null,
+  base64Data: null,
+  clarifaiRes: '',
+
     box: {},
     route: 'signin',
     isSignedIn: false,
@@ -42,13 +47,16 @@ const initialState={
     }
   }
 class App extends Component {
-  constructor(){
+  constructor() {
+    
     super();
     this.state = {
       input: '',
       imageURL: '',
       selectedFile: null,
+      previewFile:null,
       base64Data: null,
+      clarifaiRes: '',
       box: {},
       route: 'signin',
       isSignedIn: false,
@@ -60,9 +68,11 @@ class App extends Component {
         joined: ''
       }
     }
+
   }
 
   calculateFaceLocation = (data) => {
+    console.log(data)
     const clarifaiFace =
       data.outputs[0]
         .data.regions[0]
@@ -91,7 +101,7 @@ class App extends Component {
   }
 
   onFileChange = (event) => {
-    this.setState({ selectedFile: event.target.files[0] }); 
+    this.setState({ selectedFile: event.target.files[0],previewFile:event.target.files[0] }); 
   }
 
   onButtonSubmit = () => {
@@ -127,37 +137,41 @@ class App extends Component {
 
   }
 
-  onButtonUpload = () => {
-    fetch('https://safe-scrubland-81316.herokuapp.com/image64url', {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        input: this.state.base64Data
-
-      })
-    })
-    .then(response=> response.json())
-    .then(response => {
-      if (response) {
-        fetch('https://safe-scrubland-81316.herokuapp.com/image', {
-          method: 'put',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: this.state.user.id
-  
-          })
-        })
-          .then(response => response.json())
-          .then(count => {
-            this.setState(Object.assign(this.state.user, { entries: count }))
-        })
-        .catch(console.log);
-      }
-      this.displayFaceBox(this.calculateFaceLocation(response));
-    })
-    .catch(err => console.log(err));
-
+  callbackFunction = (childData) => {
+    console.log(this.state.clarifaiRes);
+    this.setState({ clarifaiRes: childData });
+    this.displayFaceBox(this.calculateFaceLocation(this.state.clarifaiRes))
+    
   }
+  
+  onButtonUpload = () => {
+    this.displayFaceBox(this.calculateFaceLocation(this.state.clarifaiRes));
+    
+  }
+  // onButtonUpload = () => {
+
+  //   .then(response=> response.json())
+  //   .then(response => {
+  //     if (response) {
+  //       fetch('https://safe-scrubland-81316.herokuapp.com/image', {
+  //         method: 'put',
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify({
+  //           id: this.state.user.id
+  
+  //         })
+  //       })
+  //         .then(response => response.json())
+  //         .then(count => {
+  //           this.setState(Object.assign(this.state.user, { entries: count }))
+  //       })
+  //       .catch(console.log);
+  //     }
+  //     this.displayFaceBox(this.calculateFaceLocation(response));
+  //   })
+  //   .catch(err => console.log(err));
+
+  // }
   
   onRouteChange = (route) => {
     if (route === 'signout'){
@@ -180,7 +194,7 @@ class App extends Component {
     })
   }
   render() {
-    const { isSignedIn, imageURL, route, box } = this.state;
+    const { isSignedIn, imageURL, route, box,base64Data } = this.state;
     return (
       <div className="App">
         <Particles className='particles'
@@ -202,12 +216,22 @@ class App extends Component {
           base64Data={this.state.base64Data}
           encodeImageAsUrl={this.encodeImageAsUrl}/>    
 
-        {this.state.base64Data !== null ?
-        (this.onButtonUpload())
-          :<div></div>
+            {this.state.base64Data !== null ?
+              <div>
+                <HandleApi
+                  base64Data={this.state.base64Data}
+                  displayFaceBox={this.displayFaceBox}
+                  calculateFaceLocation={this.calculateFaceLocation}
+                  parentCallback = {this.callbackFunction}
+                />
+                {/* {this.state.clarifaiRes !== null ? <div>
+                  ({ this.onButtonUpload() })</div> : <div></div>}
+                 */}
+                </div>
+              :(<div></div>)
     }
              
-                <FaceRecognition box={box} imageURL={imageURL} />
+                <FaceRecognition box={box} imageURL={imageURL} base64Data={base64Data} />
           </div>
           : (
             route === 'signin'
