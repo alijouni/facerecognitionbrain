@@ -3,6 +3,7 @@ import './App.css';
 import Navigation from './components/Navigation/Navigation'
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import EncodeImage from './components/ImageLinkForm/EncodeImage';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Rank from './components/Rank/Rank';
 import Signin from './components/Signin/Signin';
@@ -28,6 +29,7 @@ const initialState={
     input: '',
     imageURL: '',
     selectedFile: null,
+    base64Data: null,
     box: {},
     route: 'signin',
     isSignedIn: false,
@@ -46,6 +48,7 @@ class App extends Component {
       input: '',
       imageURL: '',
       selectedFile: null,
+      base64Data: null,
       box: {},
       route: 'signin',
       isSignedIn: false,
@@ -80,6 +83,9 @@ class App extends Component {
     this.setState({ box: box });
   }
 
+  encodeImageAsUrl = (data) => {
+    this.setState({ selectedFile: null, base64Data: data });
+  }
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   }
@@ -122,11 +128,11 @@ class App extends Component {
   }
 
   onButtonUpload = () => {
-    fetch('https://safe-scrubland-81316.herokuapp.com/imageurl', {
+    fetch('https://safe-scrubland-81316.herokuapp.com/image64url', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        input: this.state.selectedFile
+        input: this.state.base64Data
 
       })
     })
@@ -190,8 +196,17 @@ class App extends Component {
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
                 onFileChange={this.onFileChange}
-                onButtonUpload={this.onButtonUpload}
               />
+              <EncodeImage
+          selectedFile={this.state.selectedFile}
+          base64Data={this.state.base64Data}
+          encodeImageAsUrl={this.encodeImageAsUrl}/>    
+
+        {this.state.base64Data !== null ?
+        (this.onButtonUpload())
+          :<div></div>
+    }
+             
                 <FaceRecognition box={box} imageURL={imageURL} />
           </div>
           : (
