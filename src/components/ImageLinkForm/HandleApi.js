@@ -9,15 +9,16 @@ const HandleApi = ({base64Data,parentCallback})=> {
             const app = new Clarifai.App({
                 apiKey: '3b491503921247e8b965300f384d2118',
             });
+            //console.log(base64Data)
             
-            app.models.predict('f76196b43bbd45c99b4f3cd8e8b40a8a', base64Data)
+            app.models.predict( Clarifai.FACE_DETECT_MODEL, base64Data)
                 //.then(result =>  result.json() )
                 .then(response => {
                     console.log(response);
                     parentCallback(response);
                     ;
                 })
-                .catch(error => console.log('error', error));
+                .catch(error => console.log('error API', error));
         
         
         

@@ -25,15 +25,16 @@ class EncodeImage extends Component {
             console.log(this.props.selectedFile)
             var promise = getBase64(this.props.selectedFile);
           promise.then(data => {
-            data.replace(/^data:image\/[a-z]+;base64,/, "")
+            this.props.encodeImageAsUrl(data);
           })
-              .then(result => {
-                  this.props.encodeImageAsUrl(result);
-                // console.log("SET STATE");
-                // console.log(this.state.base64Data);
+            //   .then(result => {
+            //     console.log(result);
+            //       this.props.encodeImageAsUrl(result);
+            //     // console.log("SET STATE");
+            //     // console.log(this.state.base64Data);
             
-              }
-            )
+            //   }
+            // )
           
           }
         return (true)

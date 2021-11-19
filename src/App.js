@@ -33,6 +33,7 @@ const initialState={
   selectedFile: null,
   previewFile:null,
   base64Data: null,
+  preview64Data:null,
   clarifaiRes: '',
 
     box: {},
@@ -56,6 +57,7 @@ class App extends Component {
       selectedFile: null,
       previewFile:null,
       base64Data: null,
+      preview64Data:null,
       clarifaiRes: '',
       box: {},
       route: 'signin',
@@ -72,7 +74,6 @@ class App extends Component {
   }
 
   calculateFaceLocation = (data) => {
-    console.log(data)
     const clarifaiFace =
       data.outputs[0]
         .data.regions[0]
@@ -94,7 +95,7 @@ class App extends Component {
   }
 
   encodeImageAsUrl = (data) => {
-    this.setState({ selectedFile: null, base64Data: data });
+    this.setState({ selectedFile: null, base64Data: data.replace(/^data:image\/[a-z]+;base64,/, ""),preview64Data:data });
   }
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
@@ -194,7 +195,7 @@ class App extends Component {
     })
   }
   render() {
-    const { isSignedIn, imageURL, route, box,base64Data } = this.state;
+    const { isSignedIn, imageURL, route, box,base64Data,preview64Data } = this.state;
     return (
       <div className="App">
         <Particles className='particles'
@@ -231,7 +232,7 @@ class App extends Component {
               :(<div></div>)
     }
              
-                <FaceRecognition box={box} imageURL={imageURL} base64Data={base64Data} />
+                <FaceRecognition box={box} imageURL={imageURL} preview64Data={preview64Data} />
           </div>
           : (
             route === 'signin'
