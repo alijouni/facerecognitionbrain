@@ -101,7 +101,21 @@ class App extends Component {
   }
 
   onFileChange = (event) => {
-    this.setState({ selectedFile: event.target.files[0],previewFile:event.target.files[0] }); 
+    this.setState({ selectedFile: event.target.files[0], previewFile: event.target.files[0] });
+    
+    fetch('https://safe-scrubland-81316.herokuapp.com/image', {
+      method: 'put',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: this.state.user.id
+
+      })
+    })
+      .then(response => response.json())
+      .then(count => {
+        this.setState(Object.assign(this.state.user, { entries: count }))
+    })
+    .catch(err=> console.log(err));
   }
 
   onButtonSubmit = () => {
@@ -144,10 +158,10 @@ class App extends Component {
     
   }
   
-  onButtonUpload = () => {
-    this.displayFaceBox(this.calculateFaceLocation(this.state.clarifaiRes));
+  // onButtonUpload = () => {
+  //   this.displayFaceBox(this.calculateFaceLocation(this.state.clarifaiRes));
     
-  }
+  // }
   // onButtonUpload = () => {
 
   //   .then(response=> response.json())
