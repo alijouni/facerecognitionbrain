@@ -10,7 +10,6 @@ import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
 import Particles from 'react-particles-js';
 import HandleApi from './components/ImageLinkForm/HandleApi';
-import {useEffect} from 'react';
 
 
 
@@ -106,7 +105,7 @@ class App extends Component {
   }
 
   onButtonSubmit = () => {
-    this.setState({ imageURL: this.state.input });
+    this.setState({ imageURL: this.state.input, preview64Data:null });
     fetch('https://safe-scrubland-81316.herokuapp.com/imageurl', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -195,7 +194,7 @@ class App extends Component {
     })
   }
   render() {
-    const { isSignedIn, imageURL, route, box,base64Data,preview64Data } = this.state;
+    const { isSignedIn, imageURL, route, box,preview64Data } = this.state;
     return (
       <div className="App">
         <Particles className='particles'
