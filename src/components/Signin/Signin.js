@@ -49,8 +49,8 @@ class Signin extends React.Component {
                         <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                             <legend className="f1 fw6 ph0 mh0">Sign In</legend>
                             {this.state.isValid=== false ? 
-                            <div>
-                               Invalid Credentials 
+                            <div className="f3 b--dark-red">
+                               Invalid Credentials Entered!!
                             </div>
                             :<div></div>}
                             <div className="mt3">
