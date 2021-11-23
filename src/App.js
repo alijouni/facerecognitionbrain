@@ -158,34 +158,6 @@ class App extends Component {
     
   }
   
-  // onButtonUpload = () => {
-  //   this.displayFaceBox(this.calculateFaceLocation(this.state.clarifaiRes));
-    
-  // }
-  // onButtonUpload = () => {
-
-  //   .then(response=> response.json())
-  //   .then(response => {
-  //     if (response) {
-  //       fetch('https://safe-scrubland-81316.herokuapp.com/image', {
-  //         method: 'put',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: JSON.stringify({
-  //           id: this.state.user.id
-  
-  //         })
-  //       })
-  //         .then(response => response.json())
-  //         .then(count => {
-  //           this.setState(Object.assign(this.state.user, { entries: count }))
-  //       })
-  //       .catch(console.log);
-  //     }
-  //     this.displayFaceBox(this.calculateFaceLocation(response));
-  //   })
-  //   .catch(err => console.log(err));
-
-  // }
   
   onRouteChange = (route) => {
     if (route === 'signout'){
