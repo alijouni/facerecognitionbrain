@@ -7,7 +7,8 @@ class Register extends React.Component {
         this.state = {
             email: '',
             password: '',
-            name:''
+            name:'',
+            isFound: false
         }
     }
 
@@ -33,16 +34,20 @@ class Register extends React.Component {
                 name: this.state.name
             })
         })
-            .then(response => {
-                response.json();
-            if(response.json()==='Email found'){
-                console.log('HOURAAAAAAY');
-            }})
+            .then(response =>{if(response.status===400){throw new Error('Email already exists')}})
+            .then(response =>response.json())
             .then(user => {
                 if (user.id) {
+                    this.setState({isFound:false});
                     this.props.loadUser(user)
                     this.props.onRouteChange('home');
+                    
             }
+
+        })
+        .catch(err=>{
+            this.setState({isFound:true})
+            console.log(err)
         })
         
     }
@@ -53,6 +58,11 @@ class Register extends React.Component {
                     <div className="measure ">
                         <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                             <legend className="f1 fw6 ph0 mh0">Register</legend>
+                            {this.state.isFound=== true ? 
+                            <div className="f5 b dark-red">
+                               Email Already Exists!!
+                            </div>
+                            :<div></div>}
                             <div className="mt3">
                                 <label className="db fw6 lh-copy f6" htmlFor="name">Name</label>
                                 <input
