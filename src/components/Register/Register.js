@@ -34,15 +34,21 @@ class Register extends React.Component {
                 name: this.state.name
             })
         })
-            .then(response =>{if(response.status===400){throw new Error('Email already exists')}})
-            .then(response =>response.json())
+            .then(response => {
+                if (response.status === 400) { throw new Error('Email already exists') };
+                return response.json();
+                 }
+            )
             .then(user => {
-                if (user.id) {
-                    this.setState({isFound:false});
-                    this.props.loadUser(user)
-                    this.props.onRouteChange('home');
+    
+                        if (user.id) {
+                            this.setState({ isFound: false });
+                            this.props.loadUser(user);
+                            this.props.onRouteChange('home');
                     
-            }
+                        }
+            
+                
 
         })
         .catch(err=>{
