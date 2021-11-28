@@ -4,12 +4,6 @@ class EncodeImage extends Component {
         super();
     }
     
-    // shouldComponentUpdate() {
-    //     console.log('Greeting - shouldComponentUpdate lifecycle');
-    
-    //     return false;
-    // }
-    
     render() {
         if (this.props.selectedFile) {
             console.log('Attempt')
@@ -27,15 +21,6 @@ class EncodeImage extends Component {
           promise.then(data => {
             this.props.encodeImageAsUrl(data);
           })
-            //   .then(result => {
-            //     console.log(result);
-            //       this.props.encodeImageAsUrl(result);
-            //     // console.log("SET STATE");
-            //     // console.log(this.state.base64Data);
-            
-            //   }
-            // )
-          
           }
         return (true)
     }

@@ -16,6 +16,7 @@ background-size: 40px 60px;
     padding: 6px 12px;
     cursor: pointer;
 }
+
 input[type="file"] {
     display: none;
 }

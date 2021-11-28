@@ -14,12 +14,12 @@ const ImageLinkForm = ({onFileChange,onInputChange, onButtonSubmit }) => {
                 <div className='form center pa4 br3 shadow-5'>
                     <input className='f4 pa2 w-70 center' type='text' onChange={onInputChange}/>
                     <button
-                        className='w-30 grow f4 link ph3 pv2 dib white bg-light-purple'
+                        className='w-15 grow f4 link ph3 pv2 dib white bg-black'
                         onClick={onButtonSubmit}
                     >Detect</button>
                     <label 
                         htmlFor="file-upload" 
-                        className="custom-file-upload w-30 grow f4 link ph3 pv2 dib white bg-light-purple">
+                        className="custom-file-upload w-15 grow f4 link ph3 pv2 dib white bg-black">
                             Upload </label>
                     <input id="file-upload"  type="file" onChange={onFileChange}/>
                     </div>
