@@ -33,6 +33,7 @@ const initialState={
   previewFile:null,
   base64Data: null,
   preview64Data:null,
+  maxUploadSize:false,
   clarifaiRes: '',
 
     box: {},
@@ -57,6 +58,7 @@ class App extends Component {
       previewFile:null,
       base64Data: null,
       preview64Data:null,
+      maxUploadSize:false,
       clarifaiRes: '',
       box: {},
       route: 'signin',
@@ -94,15 +96,20 @@ class App extends Component {
   }
 
   encodeImageAsUrl = (data) => {
-    this.setState({ selectedFile: null, base64Data: data.replace(/^data:image\/[a-z]+;base64,/, ""),preview64Data:data });
+    this.setState({ selectedFile: null, base64Data: data.replace(/^data:image\/[a-z]+;base64,/, ""),preview64Data:data,maxUploadSize:false });
   }
+
+  maxUploadSizeReached=()=>{
+    this.setState({selectedFile: null,maxUploadSize:true})
+  }
+  
   onInputChange = (event) => {
     this.setState({ input: event.target.value });
   }
 
   onFileChange = (event) => {
     this.setState({ selectedFile: event.target.files[0], previewFile: event.target.files[0] });
-    
+
     fetch('https://safe-scrubland-81316.herokuapp.com/image', {
       method: 'put',
       headers: { 'Content-Type': 'application/json' },
@@ -187,13 +194,14 @@ class App extends Component {
           params={particlesOptions}
         />
         <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
-        <p>Hello</p>
+        <p className='f1 bg-black-90 center pa1 fw1 i white-60'>Face Detection App</p>
         { this.state.route==='home' 
           
           ? <div>
               <Logo />
               <Rank name={this.state.user.name} entries={this.state.user.entries}/>
               <ImageLinkForm
+                maxUploadSize={this.state.maxUploadSize}
                 onInputChange={this.onInputChange}
                 onButtonSubmit={this.onButtonSubmit}
                 onFileChange={this.onFileChange}
@@ -201,7 +209,8 @@ class App extends Component {
               <EncodeImage
           selectedFile={this.state.selectedFile}
           base64Data={this.state.base64Data}
-          encodeImageAsUrl={this.encodeImageAsUrl}/>    
+          encodeImageAsUrl={this.encodeImageAsUrl}
+          maxUploadSizeReached={this.maxUploadSizeReached}/>    
 
             {this.state.base64Data !== null ?
               <div>
@@ -211,9 +220,6 @@ class App extends Component {
                   calculateFaceLocation={this.calculateFaceLocation}
                   parentCallback = {this.callbackFunction}
                 />
-                {/* {this.state.clarifaiRes !== null ? <div>
-                  ({ this.onButtonUpload() })</div> : <div></div>}
-                 */}
                 </div>
               :(<div></div>)
     }

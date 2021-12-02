@@ -15,13 +15,18 @@ class EncodeImage extends Component {
                 reader.readAsDataURL(file);
             });
         }
-        
+        if(this.props.selectedFile.size<1000000){
             console.log(this.props.selectedFile)
             var promise = getBase64(this.props.selectedFile);
           promise.then(data => {
             this.props.encodeImageAsUrl(data);
           })
           }
+          else{
+            this.props.maxUploadSizeReached();
+
+          }
+        }
         return (true)
     }
 }
